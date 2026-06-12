@@ -66,6 +66,15 @@ window._sbUpdateProfile = async (userId, updates) => {
   if (error) throw error;
 };
 
+/** Count total registered users from the profiles table */
+window._sbCountUsers = async () => {
+  const { count, error } = await supabase
+    .from('profiles')
+    .select('*', { count: 'exact', head: true });
+  if (error) { console.warn('User count error:', error.message); return 0; }
+  return count || 0;
+};
+
 // ── Auth state listener ───────────────────────────────────────
 supabase.auth.onAuthStateChange(async (event, session) => {
   if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session) {
@@ -226,41 +235,62 @@ window._sbDeleteResource = async (id) => {
 };
 
 // ════════════════════════════════════════════════════════════════
-//  GEMINI CHAT  (calls the secure Supabase Edge Function)
+//  AI CHAT  (calls Supabase Edge Function — claude-proxy or gemini-proxy)
+//  The API key is NEVER exposed to the browser.
+//
+//  To enable Claude AI:
+//    1. Deploy supabase/functions/claude-proxy  (see README)
+//    2. supabase secrets set ANTHROPIC_API_KEY=sk-ant-...
+//
+//  To use Gemini instead:
+//    supabase secrets set GEMINI_API_KEY=AIza...
 // ════════════════════════════════════════════════════════════════
 
 /**
- * Send a message to Gemini via the backend Edge Function.
- * The API key is NEVER exposed to the browser.
+ * Send a message to the AI via the backend Edge Function.
+ * Tries claude-proxy first, falls back to gemini-proxy.
  *
  * @param {Array}  history  – previous [{role, parts}] turns
  * @param {string} message  – latest user message
  * @returns {string} AI reply text
  */
 window._geminiChat = async (history, message) => {
-  // Attach the user's JWT so the edge function can verify auth
   const { data: { session } } = await supabase.auth.getSession();
+  // Use JWT access_token when available; anon key as fallback
   const authToken = session?.access_token ?? SUPABASE_KEY;
 
-  const res = await fetch(`${SUPABASE_URL}/functions/v1/gemini-proxy`, {
-    method : 'POST',
-    headers: {
-      'Content-Type' : 'application/json',
-      'Authorization': `Bearer ${authToken}`,
-      'apikey'       : SUPABASE_KEY,
-    },
-    body: JSON.stringify({ history, message }),
-  });
+  const headers = {
+    'Content-Type' : 'application/json',
+    'Authorization': `Bearer ${authToken}`,
+    'apikey'       : SUPABASE_KEY,
+  };
+  const body = JSON.stringify({ history, message });
 
-  const data = await res.json().catch(() => ({}));
+  // Try endpoints in order — claude-proxy first, gemini-proxy as fallback
+  const endpoints = [
+    `${SUPABASE_URL}/functions/v1/claude-proxy`,
+    `${SUPABASE_URL}/functions/v1/gemini-proxy`,
+  ];
 
-  if (!res.ok) {
-    throw new Error(data?.message || data?.error || `Gemini proxy error (${res.status})`);
+  let lastErr;
+  for (const url of endpoints) {
+    try {
+      const res = await fetch(url, { method: 'POST', headers, body });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        lastErr = new Error(data?.message || data?.error || `Proxy error (${res.status})`);
+        continue;   // try next endpoint
+      }
+      if (!data.reply) {
+        lastErr = new Error('Empty response from AI backend');
+        continue;
+      }
+      return data.reply;
+    } catch (e) {
+      lastErr = e;
+    }
   }
-  if (!data.reply) {
-    throw new Error('Empty response from Gemini backend');
-  }
-  return data.reply;
+  throw lastErr || new Error('All AI proxies failed');
 };
 
 // ════════════════════════════════════════════════════════════════
