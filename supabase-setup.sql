@@ -10,6 +10,10 @@
 --      (missing public SELECT policy + private storage bucket)
 --   2) Group chat only working locally (no shared table existed)
 --   3) Adds avatar_url support for the new Settings page
+--   4) "Could not find the 'description' column of 'resources' in the
+--      schema cache" — self-heals a pre-existing resources/chat_messages
+--      table that's missing columns, and forces PostgREST to reload its
+--      schema cache immediately
 -- ════════════════════════════════════════════════════════════════
 
 -- ───────────────────────────────────────────────────────────────
@@ -64,6 +68,28 @@ create table if not exists public.resources (
   created_at     timestamptz default now()
 );
 
+-- ⚠️ If `resources` already existed in your project from an earlier
+--    version of the app, the `create table if not exists` above does
+--    NOTHING to it — it will NOT add columns that were introduced later
+--    (like `description`). That mismatch is what causes errors such as
+--    "Could not find the 'description' column of 'resources' in the
+--    schema cache". This block makes sure every column the app needs
+--    actually exists, whether the table is brand new or years old.
+alter table if exists public.resources
+  add column if not exists topic          text default 'General',
+  add column if not exists description    text default '',
+  add column if not exists file_url       text,
+  add column if not exists file_name      text,
+  add column if not exists file_size      bigint,
+  add column if not exists url            text,
+  add column if not exists body           text,
+  add column if not exists type           text default 'article',
+  add column if not exists source_type    text default 'file',
+  add column if not exists uploaded_by    uuid references auth.users(id) on delete set null,
+  add column if not exists uploader_email text,
+  add column if not exists uploader_name  text,
+  add column if not exists created_at     timestamptz default now();
+
 alter table public.resources enable row level security;
 
 -- Anyone (including logged-out visitors) can READ every resource.
@@ -114,6 +140,12 @@ create table if not exists public.chat_messages (
   user_id     uuid references auth.users(id) on delete set null,
   created_at  timestamptz default now()
 );
+
+-- Same self-healing as above, in case this table already existed
+-- with a different shape.
+alter table if exists public.chat_messages
+  add column if not exists user_id    uuid references auth.users(id) on delete set null,
+  add column if not exists created_at timestamptz default now();
 
 alter table public.chat_messages enable row level security;
 
@@ -191,6 +223,17 @@ create policy "Owner update - avatars bucket"
   on storage.objects for update
   to authenticated
   using (bucket_id = 'avatars' and owner = auth.uid());
+
+-- ───────────────────────────────────────────────────────────────
+-- 5. FORCE POSTGREST TO RELOAD ITS SCHEMA CACHE
+--    PostgREST (the API layer Supabase's JS client talks to) caches
+--    the table/column list. After ALTERing tables above, that cache
+--    can be stale for a few minutes and you'll see errors like
+--    "Could not find the 'description' column of 'resources' in the
+--    schema cache" even though the column now exists. This forces an
+--    immediate reload so the fix takes effect right away.
+-- ───────────────────────────────────────────────────────────────
+notify pgrst, 'reload schema';
 
 -- ════════════════════════════════════════════════════════════════
 --  Done. After running this:
