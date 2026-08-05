@@ -482,42 +482,42 @@ textarea.form-control{resize:vertical;min-height:75px}
 .ent-section{display:none}
 .ent-section.active{display:block}
 
-/* ===== GEMINI CHAT ===== */
-.gemini-panel{border-radius:var(--r-xl);overflow:hidden;background:rgba(255,255,255,.02);
+/* ===== AB AI CHAT ===== */
+.abai-panel{border-radius:var(--r-xl);overflow:hidden;background:rgba(255,255,255,.02);
   border:1px solid rgba(99,102,241,.25);display:flex;flex-direction:column;height:560px;
   box-shadow:0 0 40px rgba(99,102,241,.1)}
-.gemini-header{padding:16px 20px;background:linear-gradient(135deg,rgba(99,102,241,.15),rgba(0,229,200,.05));
+.abai-header{padding:16px 20px;background:linear-gradient(135deg,rgba(99,102,241,.15),rgba(0,229,200,.05));
   border-bottom:1px solid rgba(99,102,241,.2);display:flex;align-items:center;gap:12px}
-.gemini-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#00e5c8);
+.abai-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#00e5c8);
   display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
-.gemini-status{width:8px;height:8px;border-radius:50%;background:#4ade80;flex-shrink:0;
+.abai-status{width:8px;height:8px;border-radius:50%;background:#4ade80;flex-shrink:0;
   box-shadow:0 0 6px #4ade80;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-.gemini-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:14px}
-.gemini-messages::-webkit-scrollbar{width:4px}
-.gemini-messages::-webkit-scrollbar-thumb{background:rgba(99,102,241,.2);border-radius:2px}
-.gem-msg{max-width:82%}
-.gem-msg.user{align-self:flex-end}
-.gem-bubble{padding:11px 15px;border-radius:16px;font-size:.87rem;line-height:1.6;
+.abai-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:14px}
+.abai-messages::-webkit-scrollbar{width:4px}
+.abai-messages::-webkit-scrollbar-thumb{background:rgba(99,102,241,.2);border-radius:2px}
+.abai-msg{max-width:82%}
+.abai-msg.user{align-self:flex-end}
+.abai-bubble{padding:11px 15px;border-radius:16px;font-size:.87rem;line-height:1.6;
   background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}
-.gem-msg.user .gem-bubble{background:rgba(99,102,241,.2);border-color:rgba(99,102,241,.35)}
-.gem-msg.ai .gem-bubble{background:rgba(0,229,200,.07);border-color:rgba(0,229,200,.2)}
-.gem-thinking{display:flex;gap:5px;align-items:center;padding:11px 15px}
-.gem-dot{width:7px;height:7px;border-radius:50%;background:var(--accent-teal);
-  animation:gemDot 1.2s ease-in-out infinite}
-.gem-dot:nth-child(2){animation-delay:.2s}
-.gem-dot:nth-child(3){animation-delay:.4s}
-@keyframes gemDot{0%,80%,100%{transform:scale(0.6);opacity:.4}40%{transform:scale(1);opacity:1}}
-.gemini-input-row{padding:14px;border-top:1px solid rgba(99,102,241,.15);display:flex;gap:8px;align-items:center}
-.gemini-input{flex:1;padding:10px 15px;border-radius:24px;background:rgba(255,255,255,.06);
+.abai-msg.user .abai-bubble{background:rgba(99,102,241,.2);border-color:rgba(99,102,241,.35)}
+.abai-msg.ai .abai-bubble{background:rgba(0,229,200,.07);border-color:rgba(0,229,200,.2)}
+.abai-thinking{display:flex;gap:5px;align-items:center;padding:11px 15px}
+.abai-dot{width:7px;height:7px;border-radius:50%;background:var(--accent-teal);
+  animation:abaiDot 1.2s ease-in-out infinite}
+.abai-dot:nth-child(2){animation-delay:.2s}
+.abai-dot:nth-child(3){animation-delay:.4s}
+@keyframes abaiDot{0%,80%,100%{transform:scale(0.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+.abai-input-row{padding:14px;border-top:1px solid rgba(99,102,241,.15);display:flex;gap:8px;align-items:center}
+.abai-input{flex:1;padding:10px 15px;border-radius:24px;background:rgba(255,255,255,.06);
   border:1px solid rgba(99,102,241,.2);color:var(--text-primary);font-family:var(--font-body);
   font-size:.87rem;outline:none;transition:all var(--tr)}
-.gemini-input:focus{border-color:rgba(99,102,241,.5);background:rgba(99,102,241,.08)}
-.gemini-send{width:40px;height:40px;border-radius:50%;border:none;cursor:pointer;
+.abai-input:focus{border-color:rgba(99,102,241,.5);background:rgba(99,102,241,.08)}
+.abai-send{width:40px;height:40px;border-radius:50%;border:none;cursor:pointer;
   background:linear-gradient(135deg,#6366f1,var(--accent-teal));color:#fff;
   display:flex;align-items:center;justify-content:center;font-size:1rem;transition:all var(--tr);flex-shrink:0}
-.gemini-send:hover{transform:scale(1.1);box-shadow:0 4px 20px rgba(99,102,241,.4)}
-.gemini-api-setup{padding:24px;text-align:center;border-radius:var(--r-lg);
+.abai-send:hover{transform:scale(1.1);box-shadow:0 4px 20px rgba(99,102,241,.4)}
+.abai-api-setup{padding:24px;text-align:center;border-radius:var(--r-lg);
   background:rgba(99,102,241,.05);border:1px dashed rgba(99,102,241,.3);margin-bottom:16px}
 
 /* ===== TIMETABLE ===== */
@@ -1077,7 +1077,7 @@ textarea.form-control{resize:vertical;min-height:75px}
         <div class="glass-card" style="padding:20px;text-align:center;margin-bottom:24px;border-color:rgba(244,114,182,.2)">
           <div style="font-size:2rem;margin-bottom:8px">🎭</div>
           <div style="font-weight:600;margin-bottom:6px">Music Player & More</div>
-          <div style="font-size:.84rem;color:var(--text-secondary);margin-bottom:12px">The Music Player, Gemini AI Chat, and Forest have moved to the Entertainment Hub!</div>
+          <div style="font-size:.84rem;color:var(--text-secondary);margin-bottom:12px">The Music Player, AB Ai Chat, and Forest have moved to the Entertainment Hub!</div>
           <button class="btn btn-primary" onclick="navigateTo('entertainment')">Go to Entertainment →</button>
         </div>
 
@@ -1171,7 +1171,7 @@ textarea.form-control{resize:vertical;min-height:75px}
     <!-- Tabs -->
     <div class="ent-tabs">
       <div class="ent-tab active" onclick="switchEntTab('music')">🎵 Music</div>
-      <div class="ent-tab" onclick="switchEntTab('ai')">🤖 Gemini AI</div>
+      <div class="ent-tab" onclick="switchEntTab('ai')">🤖 AB Ai</div>
       <div class="ent-tab" onclick="switchEntTab('forest')">🌲 My Forest</div>
     </div>
 
@@ -1225,30 +1225,30 @@ textarea.form-control{resize:vertical;min-height:75px}
       </div>
     </div>
 
-    <!-- GEMINI AI SECTION -->
+    <!-- AB AI SECTION -->
     <div class="ent-section" id="ent-ai">
       <!-- API key setup panel is hidden — backend handles the key -->
-      <div class="gemini-api-setup" id="gemini-setup" style="display:none"></div>
-      <div id="gemini-chat-wrap">
+      <div class="abai-api-setup" id="abai-setup" style="display:none"></div>
+      <div id="abai-chat-wrap">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
           <div style="font-size:1rem;font-weight:600;display:flex;align-items:center;gap:8px">
-            <div class="gemini-avatar">✦</div> Gemini AI Chat
+            <div class="abai-avatar">✦</div> AB Ai Chat
             <span style="font-size:.7rem;padding:2px 10px;border-radius:12px;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);color:var(--accent-bio)">🔒 Backend Secured</span>
           </div>
-          <button class="btn btn-sm btn-outline" onclick="clearGeminiKey()" title="Clear chat history">🗑 Clear</button>
+          <button class="btn btn-sm btn-outline" onclick="clearAbAiHistory()" title="Clear chat history">🗑 Clear</button>
         </div>
-        <div class="gemini-panel">
-          <div class="gemini-header">
-            <div class="gemini-avatar">🤖</div>
-            <div style="flex:1"><div style="font-weight:600;font-size:.92rem">Gemini AI</div><div style="font-size:.72rem;color:var(--text-muted)">Powered by Google Gemini · API key secured server-side</div></div>
-            <div class="gemini-status"></div>
+        <div class="abai-panel">
+          <div class="abai-header">
+            <div class="abai-avatar">🤖</div>
+            <div style="flex:1"><div style="font-weight:600;font-size:.92rem">AB Ai</div><div style="font-size:.72rem;color:var(--text-muted)">Powered by Llama 3.1 · API key secured server-side</div></div>
+            <div class="abai-status"></div>
           </div>
-          <div class="gemini-messages" id="gemini-messages">
-            <div class="gem-msg ai"><div class="gem-bubble">👋 Hi! I'm Gemini, your AI study assistant. Log in and ask me anything — I can help with Biology, Chemistry, Physics, Mathematics, Art, essays, problems, and much more!</div></div>
+          <div class="abai-messages" id="abai-messages">
+            <div class="abai-msg ai"><div class="abai-bubble">👋 Hi! I'm AB Ai, your AI study assistant. Log in and ask me anything — I can help with Biology, Chemistry, Physics, Mathematics, Art, essays, problems, and much more!</div></div>
           </div>
-          <div class="gemini-input-row">
-            <input class="gemini-input" type="text" id="gemini-input" placeholder="Ask Gemini anything…" onkeydown="if(event.key==='Enter')sendGemini()">
-            <button class="gemini-send" onclick="sendGemini()">➤</button>
+          <div class="abai-input-row">
+            <input class="abai-input" type="text" id="abai-input" placeholder="Ask AB Ai anything…" onkeydown="if(event.key==='Enter')sendAbAi()">
+            <button class="abai-send" onclick="sendAbAi()">➤</button>
           </div>
         </div>
       </div>
@@ -1324,10 +1324,12 @@ textarea.form-control{resize:vertical;min-height:75px}
 // STATE
 // ============================================================
 // NOTE: users list & auth are now handled by Supabase (script.js).
-// 'content' is seeded from Supabase on load; localStorage is kept
-// as a fallback for offline / URL / text entries.
+// 'content' (resources) lives ENTIRELY in Supabase — it is loaded fresh
+// from the `resources` table on page load / login and is never cached
+// in localStorage. Uploaded files are never stored locally either; they
+// go straight to Supabase Storage (see _sbUpload in script.js).
 let users = [];   // unused — Supabase auth replaces this
-let content = JSON.parse(localStorage.getItem('sv_content') || '[]');
+let content = [];
 let uploadedFileData = null; // { dataUrl, name, size, mime }
 let currentUploadTab = 'file';
 let currentUser = null;      // set by Supabase auth state listener
@@ -1396,14 +1398,10 @@ window._onSupabaseAuth = function(event, userData) {
       avatarUrl: userData.avatarUrl || null,
     };
     updateNavAuth();
-    // Load Supabase resources into local content array
+    // Refresh 'content' straight from Supabase — it is the single source of truth.
     if (window._sbLoadResources) {
       window._sbLoadResources().then(rows => {
-        if (rows && rows.length) {
-          // Merge: keep local-only items (no uploadedBy) + cloud items
-          const localOnly = content.filter(c => !c.uploadedBy);
-          content = [...rows, ...localOnly];
-        }
+        content = rows || [];
         renderAllActivePages();
         updateStats();
       }).catch(e => console.warn('Resource load:', e.message));
@@ -1744,69 +1742,69 @@ async function doUpload() {
   const lbl  = document.getElementById('progress-label');
 
   // ── FILE upload ──────────────────────────────────────────────
+  // Files always go straight to Supabase Storage — never to localStorage.
+  // If the cloud upload fails, the upload fails; there is no local fallback.
   if (currentUploadTab === 'file') {
     if (!uploadedFileData) { showNotif('⚠️ Select a file to upload.','#f59e0b'); return; }
     const rawFile = document.getElementById('file-input').files[0];
     const type    = document.getElementById('upload-file-type').value;
-    const item    = { ...baseItem, type, fileName: uploadedFileData.name,
-                      fileSize: uploadedFileData.size, fileMime: uploadedFileData.mime,
-                      fileExt: uploadedFileData.ext, sourceType: 'file' };
 
-    if (window._sbUpload && rawFile) {
-      prog.classList.add('show'); bar.style.width = '0%'; lbl.textContent = 'Uploading to cloud…';
-      try {
-        const url = await window._sbUpload({
-          file: rawFile, title, subject, topic, desc, type,
-          uploaderEmail: currentUser.email,
-          uploaderName : currentUser.name,
-          onProgress: pct => { bar.style.width = pct + '%'; lbl.textContent = 'Uploading… ' + Math.round(pct) + '%'; }
-        });
-        item.fileUrl  = url;
-        item.fileData = null;
-        bar.style.width = '100%'; lbl.textContent = '✅ Uploaded to cloud!';
-      } catch(err) {
-        console.warn('Supabase upload failed, using local:', err.message);
-        item.fileData = uploadedFileData.dataUrl;
-        showNotif('⚠️ Cloud upload failed — saved locally.','#f59e0b');
-      }
-    } else {
-      item.fileData = uploadedFileData.dataUrl;
+    if (!window._sbUpload || !rawFile) {
+      showNotif('❌ Cloud storage is unavailable right now — please try again shortly.','#ef4444');
+      return;
     }
 
-    content.unshift(item);
-    try { localStorage.setItem('sv_content', JSON.stringify(content)); } catch(e) {}
+    prog.classList.add('show'); bar.style.width = '0%'; lbl.textContent = 'Uploading to cloud…';
+    let fileUrl;
+    try {
+      fileUrl = await window._sbUpload({
+        file: rawFile, title, subject, topic, desc, type,
+        uploaderEmail: currentUser.email,
+        uploaderName : currentUser.name,
+        onProgress: pct => { bar.style.width = pct + '%'; lbl.textContent = 'Uploading… ' + Math.round(pct) + '%'; }
+      });
+      bar.style.width = '100%'; lbl.textContent = '✅ Uploaded to cloud!';
+    } catch(err) {
+      showNotif('❌ Upload failed: ' + err.message,'#ef4444');
+      prog.classList.remove('show');
+      return;
+    }
+
+    const item = { ...baseItem, type, fileName: uploadedFileData.name,
+                    fileSize: uploadedFileData.size, fileMime: uploadedFileData.mime,
+                    fileExt: uploadedFileData.ext, sourceType: 'file',
+                    fileUrl };
+    content.unshift(item); // in-memory only — the source of truth is Supabase
 
   // ── URL upload ───────────────────────────────────────────────
   } else if (currentUploadTab === 'url') {
     const url  = document.getElementById('upload-url').value.trim();
     if (!url) { showNotif('⚠️ Enter a URL.','#f59e0b'); return; }
     const type = document.getElementById('upload-url-type').value;
-    const item = { ...baseItem, type, url, sourceType: 'url' };
 
-    if (window._sbUploadUrl) {
-      try {
-        await window._sbUploadUrl({ url, title, subject, topic, desc, type,
-          uploaderEmail: currentUser.email, uploaderName: currentUser.name });
-      } catch(e) { console.warn('Supabase URL insert failed:', e.message); }
-    }
-    content.unshift(item);
-    try { localStorage.setItem('sv_content', JSON.stringify(content)); } catch(e) {}
+    if (!window._sbUploadUrl) { showNotif('❌ Cloud database is unavailable right now — please try again shortly.','#ef4444'); return; }
+    try {
+      await window._sbUploadUrl({ url, title, subject, topic, desc, type,
+        uploaderEmail: currentUser.email, uploaderName: currentUser.name });
+    } catch(e) { showNotif('❌ Could not save link: ' + e.message,'#ef4444'); return; }
+
+    const item = { ...baseItem, type, url, sourceType: 'url' };
+    content.unshift(item); // in-memory only — the source of truth is Supabase
 
   // ── TEXT upload ──────────────────────────────────────────────
   } else {
     const body = document.getElementById('upload-text-body').value.trim();
     if (!body) { showNotif('⚠️ Enter some content.','#f59e0b'); return; }
     const type = document.getElementById('upload-text-type').value;
-    const item = { ...baseItem, type, body, sourceType: 'text' };
 
-    if (window._sbUploadText) {
-      try {
-        await window._sbUploadText({ body, title, subject, topic, desc, type,
-          uploaderEmail: currentUser.email, uploaderName: currentUser.name });
-      } catch(e) { console.warn('Supabase text insert failed:', e.message); }
-    }
-    content.unshift(item);
-    try { localStorage.setItem('sv_content', JSON.stringify(content)); } catch(e) {}
+    if (!window._sbUploadText) { showNotif('❌ Cloud database is unavailable right now — please try again shortly.','#ef4444'); return; }
+    try {
+      await window._sbUploadText({ body, title, subject, topic, desc, type,
+        uploaderEmail: currentUser.email, uploaderName: currentUser.name });
+    } catch(e) { showNotif('❌ Could not save content: ' + e.message,'#ef4444'); return; }
+
+    const item = { ...baseItem, type, body, sourceType: 'text' };
+    content.unshift(item); // in-memory only — the source of truth is Supabase
   }
 
   uploadedFileData = null;
@@ -1819,15 +1817,32 @@ async function doUpload() {
 // ============================================================
 // EDIT / DELETE
 // ============================================================
-function doEdit() {
+async function doEdit() {
   const id = document.getElementById('edit-id').value;
   const idx = content.findIndex(c => c.id === id);
   if (idx === -1) return;
-  content[idx].title = document.getElementById('edit-title').value.trim() || content[idx].title;
-  content[idx].topic = document.getElementById('edit-topic').value.trim() || content[idx].topic;
-  content[idx].desc = document.getElementById('edit-desc').value;
-  if (document.getElementById('edit-content').value) content[idx].body = document.getElementById('edit-content').value;
-  localStorage.setItem('sv_content', JSON.stringify(content));
+
+  const title = document.getElementById('edit-title').value.trim() || content[idx].title;
+  const topic = document.getElementById('edit-topic').value.trim() || content[idx].topic;
+  const desc  = document.getElementById('edit-desc').value;
+  const body  = document.getElementById('edit-content').value;
+
+  const updates = { title, topic, description: desc };
+  if (body) updates.body = body;
+
+  if (window._sbUpdateResource) {
+    try {
+      await window._sbUpdateResource(id, updates);
+    } catch(e) {
+      showNotif('❌ Could not save changes: ' + e.message, '#ef4444');
+      return;
+    }
+  }
+
+  content[idx].title = title;
+  content[idx].topic = topic;
+  content[idx].desc = desc;
+  if (body) content[idx].body = body;
   closeModal('modal-edit');
   showNotif('✅ Updated!','var(--accent-teal)');
   renderAllActivePages();
@@ -1847,8 +1862,7 @@ function openEditModal(id) {
 function deleteContent(id) {
   if (!confirm('Delete this content permanently?')) return;
   content = content.filter(c => c.id !== id);
-  localStorage.setItem('sv_content', JSON.stringify(content));
-  // Also delete from Supabase (non-blocking)
+  // Delete from Supabase (non-blocking)
   if (window._sbDeleteResource) {
     window._sbDeleteResource(id).catch(e => console.warn('Supabase delete:', e.message));
   }
@@ -1900,12 +1914,12 @@ function viewContent(id) {
     <h2 style="font-family:var(--font-display);font-size:1.6rem;margin-bottom:14px">${esc(item.title)}</h2>`;
   if (item.desc) html += `<p style="color:var(--text-secondary);margin-bottom:14px;line-height:1.7">${esc(item.desc)}</p>`;
 
-  // Render based on source type and content type
-  // fileData = base64 (local/fallback) | fileUrl = Supabase public URL
-  const fileSrc = item.fileData || item.fileUrl || null;
+  // Render based on source type and content type.
+  // All files live in Supabase Storage — fileUrl is the public URL.
+  const fileSrc = item.fileUrl || null;
   if (item.sourceType === 'file' && fileSrc) {
     const ext = (item.fileExt || (item.fileName ? item.fileName.split('.').pop().toLowerCase() : ''));
-    const isCloud = !item.fileData && item.fileUrl; // true for Supabase-stored files
+    const isCloud = true; // all files are Supabase-stored now
     if (['mp4','webm','avi','mov'].includes(ext) || item.type === 'video') {
       html += `<div class="video-wrapper"><video src="${fileSrc}" controls></video></div>`;
     } else if (['mp3','wav','ogg'].includes(ext) || item.type === 'audio') {
@@ -1944,7 +1958,7 @@ function viewContent(id) {
   } else if (item.body) {
     html += `<div style="line-height:1.8;white-space:pre-wrap;font-size:.9rem;padding:16px;background:rgba(0,0,0,.25);border-radius:var(--r-md);margin-top:8px">${esc(item.body)}</div>`;
   } else {
-    html += `<div style="margin-top:16px;color:var(--text-muted);font-size:.88rem">⚠ File content could not be loaded. It may have been stored locally on another device.</div>`;
+    html += `<div style="margin-top:16px;color:var(--text-muted);font-size:.88rem">⚠ File content could not be loaded from Supabase.</div>`;
   }
 
   if (canManage(item)) {
@@ -2022,7 +2036,7 @@ function renderArtGallery() {
   const artItems = content.filter(c => c.subject === 'art' && c.type === 'image');
   let html = '';
   artItems.forEach(item => {
-    const src = item.fileData || item.url || '';
+    const src = item.fileUrl || item.url || '';
     if (!src) return;
     const manage = canManage(item) ? `<div style="position:absolute;top:6px;right:6px"><button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteContent('${item.id}')">🗑</button></div>` : '';
     html += `<div class="art-gallery-item glass" onclick="viewContent('${item.id}')">
@@ -2474,7 +2488,7 @@ function renderEntertainmentPage() {
   renderConnectedMusicApp();
   drawSessionTree();
   renderForest();
-  checkGeminiSetup();
+  checkAbAiSetup();
 }
 
 function switchEntTab(tab) {
@@ -2490,7 +2504,7 @@ function switchEntTab(tab) {
   const el = document.getElementById('ent-' + tab);
   if (el) el.classList.add('active');
   if (tab === 'forest') { drawSessionTree(); renderForest(); }
-  if (tab === 'ai') checkGeminiSetup();
+  if (tab === 'ai') checkAbAiSetup();
 }
 
 // ============================================================
@@ -2650,25 +2664,25 @@ setInterval(() => {
 // ============================================================
 // AI STUDY ASSISTANT CHAT  — Backend-proxied via Supabase Edge Function
 // API key lives in Supabase secrets; never exposed to browser.
-// Tries claude-proxy first (Claude AI), then gemini-proxy as fallback.
+// Tries claude-proxy first (Claude AI), then llama-proxy (Llama 3.1) as fallback.
 // ============================================================
-let geminiHistory = [];
+let abAiHistory = [];
 
-function checkGeminiSetup() {
+function checkAbAiSetup() {
   // Hide the old key-entry panel — backend handles the key
-  const setup = document.getElementById('gemini-setup');
+  const setup = document.getElementById('abai-setup');
   if (setup) setup.style.display = 'none';
 }
 
-function saveGeminiKey()  { /* no-op — key is set via Supabase secrets */ }
-function clearGeminiKey() { geminiHistory = []; showNotif('AI chat history cleared.','#f59e0b'); }
-function showGeminiSetup() { /* no-op */ }
+function saveAbAiKey()  { /* no-op — key is set via Supabase secrets */ }
+function clearAbAiHistory() { abAiHistory = []; showNotif('AI chat history cleared.','#f59e0b'); }
+function showAbAiSetup() { /* no-op */ }
 
-function appendGeminiMsg(role, text) {
-  const el = document.getElementById('gemini-messages');
+function appendAbAiMsg(role, text) {
+  const el = document.getElementById('abai-messages');
   if (!el) return;
   const div = document.createElement('div');
-  div.className = 'gem-msg ' + role;
+  div.className = 'abai-msg ' + role;
   let safeText;
   if (role === 'user') {
     safeText = String(text).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -2680,29 +2694,29 @@ function appendGeminiMsg(role, text) {
       .replace(/`(.*?)`/g,'<code style="background:rgba(255,255,255,.1);padding:1px 5px;border-radius:4px;font-family:monospace;font-size:.85em">$1</code>')
       .replace(/\n/g,'<br>');
   }
-  div.innerHTML = `<div class="gem-bubble">${safeText}</div>`;
+  div.innerHTML = `<div class="abai-bubble">${safeText}</div>`;
   el.appendChild(div);
   el.scrollTop = el.scrollHeight;
 }
 
-function showGeminiThinking() {
-  const el = document.getElementById('gemini-messages');
+function showAbAiThinking() {
+  const el = document.getElementById('abai-messages');
   if (!el) return;
   const div = document.createElement('div');
-  div.className = 'gem-msg ai';
-  div.id = 'gem-thinking';
-  div.innerHTML = '<div class="gem-bubble"><div class="gem-thinking"><div class="gem-dot"></div><div class="gem-dot"></div><div class="gem-dot"></div></div></div>';
+  div.className = 'abai-msg ai';
+  div.id = 'abai-thinking';
+  div.innerHTML = '<div class="abai-bubble"><div class="abai-thinking"><div class="abai-dot"></div><div class="abai-dot"></div><div class="abai-dot"></div></div></div>';
   el.appendChild(div);
   el.scrollTop = el.scrollHeight;
 }
 
-function removeGeminiThinking() {
-  const thinking = document.getElementById('gem-thinking');
+function removeAbAiThinking() {
+  const thinking = document.getElementById('abai-thinking');
   if (thinking) thinking.remove();
 }
 
-async function sendGemini() {
-  const input = document.getElementById('gemini-input');
+async function sendAbAi() {
+  const input = document.getElementById('abai-input');
   if (!input) return;
   const text = input.value.trim();
   if (!text) return;
@@ -2714,28 +2728,28 @@ async function sendGemini() {
   }
 
   input.value = '';
-  appendGeminiMsg('user', text);
+  appendAbAiMsg('user', text);
 
-  const historySlice = geminiHistory.slice(-10);
-  geminiHistory.push({ role:'user', parts:[{text}] });
-  showGeminiThinking();
+  const historySlice = abAiHistory.slice(-10);
+  abAiHistory.push({ role:'user', parts:[{text}] });
+  showAbAiThinking();
 
   try {
-    const reply = await window._geminiChat(historySlice, text);
-    removeGeminiThinking();
-    geminiHistory.push({ role:'model', parts:[{text:reply}] });
-    appendGeminiMsg('ai', reply);
+    const reply = await window._abAiChat(historySlice, text);
+    removeAbAiThinking();
+    abAiHistory.push({ role:'model', parts:[{text:reply}] });
+    appendAbAiMsg('ai', reply);
   } catch(e) {
-    removeGeminiThinking();
+    removeAbAiThinking();
     const msg = e.message || 'Unknown error';
     if (msg.includes('API_KEY') || msg.includes('api key') || msg.includes('not configured')) {
-      appendGeminiMsg('ai', '⚙️ The AI backend is not yet configured. Please ask the admin to deploy the Supabase Edge Function and set the API key in secrets. See the setup guide for details.');
+      appendAbAiMsg('ai', '⚙️ The AI backend is not yet configured. Please ask the admin to deploy the Supabase Edge Function and set the API key in secrets. See the setup guide for details.');
     } else if (msg.includes('Unauthorized') || msg.includes('401')) {
-      appendGeminiMsg('ai', '🔒 Your session has expired. Please log out and log in again.');
+      appendAbAiMsg('ai', '🔒 Your session has expired. Please log out and log in again.');
     } else if (msg.includes('404') || msg.includes('Not Found') || msg.includes('not found')) {
-      appendGeminiMsg('ai', '⚙️ AI proxy not found. Please deploy the Supabase Edge Function (supabase/functions/claude-proxy or gemini-proxy) to enable AI chat.');
+      appendAbAiMsg('ai', '⚙️ AI proxy not found. Please deploy the Supabase Edge Function (supabase/functions/claude-proxy or llama-proxy) to enable AI chat.');
     } else {
-      appendGeminiMsg('ai', '❌ AI error: ' + msg + '. Please try again or contact the admin.');
+      appendAbAiMsg('ai', '❌ AI error: ' + msg + '. Please try again or contact the admin.');
     }
   }
 }
@@ -3514,7 +3528,7 @@ window.addEventListener('DOMContentLoaded', () => {
   initStars();
   drawWxFrame();
   positionMoonArtistically();
-  checkGeminiSetup();  // hides the old key panel
+  checkAbAiSetup();  // hides the old key panel
 
   // Theme + ambient weather music setup
   applyTheme(currentTheme);
@@ -3522,20 +3536,18 @@ window.addEventListener('DOMContentLoaded', () => {
   updateAmbientBtn();
   armAmbientGesture(); // browsers require a user gesture before audio can start
 
-  // Gemini input enter key
-  const gi = document.getElementById('gemini-input');
-  if (gi) gi.addEventListener('keydown', e => { if(e.key === 'Enter') sendGemini(); });
+  // AB Ai input enter key
+  const gi = document.getElementById('abai-input');
+  if (gi) gi.addEventListener('keydown', e => { if(e.key === 'Enter') sendAbAi(); });
 
   // ── Supabase: load public resources for all visitors ────────
-  // (logged-in users get a refresh via _onSupabaseAuth too)
+  // 'content' is populated exclusively from Supabase — never cached in
+  // localStorage. (logged-in users get a refresh via _onSupabaseAuth too)
   if (window._sbLoadResources) {
     window._sbLoadResources().then(rows => {
-      if (rows && rows.length) {
-        const localOnly = content.filter(c => !c.uploadedBy);
-        content = [...rows, ...localOnly];
-        renderAllActivePages();
-        updateStats();
-      }
+      content = rows || [];
+      renderAllActivePages();
+      updateStats();
     }).catch(() => {});  // silent — offline or no internet
   }
 
@@ -3595,4 +3607,4 @@ window.addEventListener('DOMContentLoaded', () => {
 </div>
 
 </body>
-</html>
+</html>
