@@ -1778,6 +1778,26 @@ async function doUpload() {
   uploadedFileData = null;
   closeModal('modal-upload');
   showNotif('✅ Content uploaded successfully!','var(--accent-bio)');
+  // Re-fetch from Supabase so newly uploaded content appears with its real
+  // UUID, uploader fields, and public URL — not the optimistic local copy.
+  await refreshContentFromSupabase();
+}
+
+// ============================================================
+// SUPABASE CONTENT REFRESH
+// Re-fetches the full resources list from Supabase and re-renders
+// all pages. Called after any mutation (delete, edit, upload) so
+// the UI always reflects true server state.
+// ============================================================
+async function refreshContentFromSupabase() {
+  if (window._sbLoadResources) {
+    try {
+      const rows = await window._sbLoadResources();
+      content = rows || [];
+    } catch(e) {
+      console.warn('Refresh failed:', e.message);
+    }
+  }
   renderAllActivePages();
   updateStats();
 }
@@ -1799,22 +1819,18 @@ async function doEdit() {
   const updates = { title, topic, description: desc };
   if (body) updates.body = body;
 
-  if (!window._sbUpdateResource) { showNotif('❌ Cloud database is unavailable right now — please try again shortly.','#ef4444'); return; }
+  if (!window._sbUpdateResource) { showNotif('❌ Cloud database is unavailable — please try again shortly.','#ef4444'); return; }
   try {
-    // RLS enforces that only the uploader — or an admin — can succeed here.
     await window._sbUpdateResource(id, updates);
   } catch(e) {
     showNotif('❌ Could not save changes: ' + e.message, '#ef4444');
     return;
   }
 
-  content[idx].title = title;
-  content[idx].topic = topic;
-  content[idx].desc = desc;
-  if (body) content[idx].body = body;
   closeModal('modal-edit');
   showNotif('✅ Updated!','var(--accent-teal)');
-  renderAllActivePages();
+  // Re-fetch from Supabase so the page always reflects the true server state
+  await refreshContentFromSupabase();
 }
 
 function openEditModal(id) {
@@ -1835,25 +1851,27 @@ async function deleteContent(id) {
   if (!canManage(item)) { showNotif('❌ You can only delete your own uploads.','#ef4444'); return; }
   if (!confirm('Delete this content permanently?')) return;
 
-  if (!window._sbDeleteResource) { showNotif('❌ Cloud database is unavailable right now — please try again shortly.','#ef4444'); return; }
+  if (!window._sbDeleteResource) { showNotif('❌ Cloud database is unavailable — please try again shortly.','#ef4444'); return; }
   try {
-    // Wait for Supabase to actually confirm the delete (RLS enforces that only
-    // the uploader — or an admin — can succeed here) before touching the UI.
     await window._sbDeleteResource(id);
   } catch (e) {
     showNotif('❌ Could not delete: ' + e.message, '#ef4444');
     return;
   }
 
-  content = content.filter(c => c.id !== id);
   showNotif('🗑 Deleted.','#f59e0b');
   closeModal('modal-view');
-  renderAllActivePages();
-  updateStats();
+  // Re-fetch from Supabase so the page always reflects the true server state
+  await refreshContentFromSupabase();
 }
 
 function canManage(item) {
-  return currentUser && (currentUser.isAdmin || currentUser.email === item.uploaderEmail);
+  if (!currentUser) return false;
+  if (currentUser.isAdmin) return true;
+  // Match by UUID (most reliable — always stored) OR email (fallback for older rows)
+  if (item.uploadedBy && currentUser.id && item.uploadedBy === currentUser.id) return true;
+  if (item.uploaderEmail && currentUser.email && item.uploaderEmail === currentUser.email) return true;
+  return false;
 }
 
 // ============================================================
@@ -3340,6 +3358,10 @@ setTimeout(fetchWeather, 2000);
 setInterval(fetchWeather, 1800000);
 // Reposition moon on resize
 window.addEventListener('resize', positionMoonArtistically);
+// Poll Supabase every 60 seconds so the page stays in sync with external
+// changes (e.g. an admin deletes something from the Supabase dashboard,
+// or another browser tab uploads a new file).
+setInterval(() => { refreshContentFromSupabase(); }, 60000);
 
 // ============================================================
 // INIT ADDITIONS
