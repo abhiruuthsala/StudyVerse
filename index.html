@@ -128,9 +128,6 @@ body{font-family:var(--font-body);background:var(--bg-deep);color:var(--text-pri
 .settings-tab{flex:1;padding:8px 10px;border-radius:10px;border:1px solid var(--glass-border);background:transparent;color:var(--text-secondary);font-family:var(--font-body);font-size:.82rem;cursor:pointer;transition:all var(--tr)}
 .settings-tab.active{background:var(--glass-bg);color:var(--text-primary);border-color:var(--accent-teal)}
 .settings-theme-btn.active{background:var(--accent-teal);color:#04211d;border-color:var(--accent-teal)}
-#ambient-toggle-btn{position:fixed;right:18px;bottom:18px;z-index:900;width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.15rem;cursor:pointer;background:rgba(255,255,255,.08);backdrop-filter:blur(16px);border:1px solid var(--glass-border);color:var(--text-primary);transition:all var(--tr)}
-#ambient-toggle-btn:hover{transform:scale(1.08);border-color:var(--accent-teal)}
-#ambient-toggle-btn.playing{box-shadow:0 0 0 4px rgba(0,229,200,.15)}
 .btn-outline:hover{background:var(--glass-bg)}
 .btn-primary{background:linear-gradient(135deg,var(--accent-gold),#f59e0b);color:#0a0a0a}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(245,200,66,.35)}
@@ -549,7 +546,7 @@ textarea.form-control{resize:vertical;min-height:75px}
 .reminder-item .rem-time{font-size:.73rem;color:var(--accent-gold);flex-shrink:0}
 .reminder-item .rem-del{cursor:pointer;color:var(--text-muted);padding:2px 6px;font-size:.85rem}
 .reminder-item .rem-del:hover{color:#fca5a5}
-.reminder-bell{position:fixed;bottom:80px;right:16px;z-index:9998;width:48px;height:48px;
+.reminder-bell{position:fixed;bottom:18px;right:16px;z-index:9998;width:48px;height:48px;
   border-radius:50%;background:linear-gradient(135deg,var(--accent-gold),#f59e0b);
   border:none;cursor:pointer;font-size:1.3rem;display:flex;align-items:center;justify-content:center;
   box-shadow:0 4px 24px rgba(245,200,66,.4);transition:all var(--tr)}
@@ -633,9 +630,6 @@ textarea.form-control{resize:vertical;min-height:75px}
 <button class="reminder-bell" onclick="openModal('modal-reminders')" title="Reminders" id="reminder-bell-btn">
   🔔<span class="bell-badge" id="bell-badge" style="display:none">0</span>
 </button>
-
-<!-- Weather Ambient Music standby button -->
-<button id="ambient-toggle-btn" onclick="toggleAmbient()" title="Weather ambience — click to play/pause">🎵</button>
 
 <div class="cosmic-bg"></div>
 <div class="orb orb-1"></div>
@@ -765,7 +759,6 @@ textarea.form-control{resize:vertical;min-height:75px}
     <div class="settings-tabs" style="display:flex;gap:6px;margin:14px 0 18px">
       <button type="button" class="settings-tab active" data-tab="profile" onclick="switchSettingsTab('profile')">👤 Profile</button>
       <button type="button" class="settings-tab" data-tab="appearance" onclick="switchSettingsTab('appearance')">🎨 Appearance</button>
-      <button type="button" class="settings-tab" data-tab="music" onclick="switchSettingsTab('music')">🎵 Music</button>
     </div>
 
     <!-- PROFILE TAB -->
@@ -790,31 +783,6 @@ textarea.form-control{resize:vertical;min-height:75px}
         <button type="button" class="btn btn-outline settings-theme-btn" data-theme="light" onclick="setTheme('light')" style="flex:1">☀️ Light</button>
       </div>
       <p style="font-size:.76rem;color:var(--text-muted);margin-top:12px">Your theme choice is saved on this device.</p>
-    </div>
-
-    <!-- MUSIC TAB -->
-    <div id="settings-tab-music" class="settings-tab-content" style="display:none">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-        <label class="form-label" style="margin:0">Weather-synced ambience</label>
-        <input type="checkbox" id="music-enabled-toggle" onchange="onMusicSettingChange()" style="width:20px;height:20px">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Volume</label>
-        <input type="range" id="music-volume-slider" min="0" max="1" step="0.05" oninput="onMusicSettingChange()" style="width:100%">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Mood</label>
-        <select class="form-control" id="music-override-select" onchange="onMusicSettingChange()">
-          <option value="auto">Auto (match live weather)</option>
-          <option value="clear">☀️ Clear Day</option>
-          <option value="night">🌙 Clear Night</option>
-          <option value="clouds">⛅ Cloudy</option>
-          <option value="rain">🌧 Rain</option>
-          <option value="night-rain">🌧 Rainy Night</option>
-        </select>
-      </div>
-      <button class="btn btn-outline w-full" style="padding:11px;margin-top:6px" onclick="toggleAmbient()" id="settings-ambient-btn">▶ Play Ambience</button>
-      <p style="font-size:.76rem;color:var(--text-muted);margin-top:10px">Ambient sound is generated in your browser — no files to download, and it never overrides the entertainment music player.</p>
     </div>
   </div>
 </div>
@@ -1821,6 +1789,7 @@ async function doEdit() {
   const id = document.getElementById('edit-id').value;
   const idx = content.findIndex(c => c.id === id);
   if (idx === -1) return;
+  if (!canManage(content[idx])) { showNotif('❌ You can only edit your own uploads.','#ef4444'); closeModal('modal-edit'); return; }
 
   const title = document.getElementById('edit-title').value.trim() || content[idx].title;
   const topic = document.getElementById('edit-topic').value.trim() || content[idx].topic;
@@ -1830,13 +1799,13 @@ async function doEdit() {
   const updates = { title, topic, description: desc };
   if (body) updates.body = body;
 
-  if (window._sbUpdateResource) {
-    try {
-      await window._sbUpdateResource(id, updates);
-    } catch(e) {
-      showNotif('❌ Could not save changes: ' + e.message, '#ef4444');
-      return;
-    }
+  if (!window._sbUpdateResource) { showNotif('❌ Cloud database is unavailable right now — please try again shortly.','#ef4444'); return; }
+  try {
+    // RLS enforces that only the uploader — or an admin — can succeed here.
+    await window._sbUpdateResource(id, updates);
+  } catch(e) {
+    showNotif('❌ Could not save changes: ' + e.message, '#ef4444');
+    return;
   }
 
   content[idx].title = title;
@@ -1851,6 +1820,7 @@ async function doEdit() {
 function openEditModal(id) {
   const item = content.find(c => c.id === id);
   if (!item) return;
+  if (!canManage(item)) { showNotif('❌ You can only edit your own uploads.','#ef4444'); return; }
   document.getElementById('edit-id').value = id;
   document.getElementById('edit-title').value = item.title;
   document.getElementById('edit-topic').value = item.topic || '';
@@ -1859,13 +1829,23 @@ function openEditModal(id) {
   openModal('modal-edit');
 }
 
-function deleteContent(id) {
+async function deleteContent(id) {
+  const item = content.find(c => c.id === id);
+  if (!item) return;
+  if (!canManage(item)) { showNotif('❌ You can only delete your own uploads.','#ef4444'); return; }
   if (!confirm('Delete this content permanently?')) return;
-  content = content.filter(c => c.id !== id);
-  // Delete from Supabase (non-blocking)
-  if (window._sbDeleteResource) {
-    window._sbDeleteResource(id).catch(e => console.warn('Supabase delete:', e.message));
+
+  if (!window._sbDeleteResource) { showNotif('❌ Cloud database is unavailable right now — please try again shortly.','#ef4444'); return; }
+  try {
+    // Wait for Supabase to actually confirm the delete (RLS enforces that only
+    // the uploader — or an admin — can succeed here) before touching the UI.
+    await window._sbDeleteResource(id);
+  } catch (e) {
+    showNotif('❌ Could not delete: ' + e.message, '#ef4444');
+    return;
   }
+
+  content = content.filter(c => c.id !== id);
   showNotif('🗑 Deleted.','#f59e0b');
   closeModal('modal-view');
   renderAllActivePages();
@@ -3280,167 +3260,10 @@ function setWeatherCondition(cond, isDay) {
   cancelAnimationFrame(wxAnimFrame);
   initWxParticles();
   drawWxFrame();
-  updateAmbientForWeather();
 }
 
 // ============================================================
-// WEATHER-SYNCED AMBIENT MUSIC (procedurally generated — no
-// audio files, so nothing to host or break). Independent from the
-// Entertainment-tab playlist player.
-// ============================================================
-let ambientCtx = null;
-let ambientNodes = [];
-let ambientPlaying = false;
-let ambientEnabled = true;
-let ambientVolume = 0.35;
-let ambientOverride = 'auto';
-let ambientGestureArmed = false;
-
-function loadMusicSettings() {
-  try {
-    const s = JSON.parse(localStorage.getItem('sv_music_settings') || '{}');
-    ambientEnabled  = s.enabled !== false;
-    ambientVolume   = typeof s.volume === 'number' ? s.volume : 0.35;
-    ambientOverride = s.override || 'auto';
-  } catch (e) { /* defaults stand */ }
-}
-function saveMusicSettings() {
-  try { localStorage.setItem('sv_music_settings', JSON.stringify({ enabled: ambientEnabled, volume: ambientVolume, override: ambientOverride })); } catch (e) {}
-}
-
-function ensureAmbientCtx() {
-  if (!ambientCtx) ambientCtx = new (window.AudioContext || window.webkitAudioContext)();
-  if (ambientCtx.state === 'suspended') ambientCtx.resume();
-  return ambientCtx;
-}
-
-function makeNoiseBuffer(ctx, seconds) {
-  const size = Math.floor(ctx.sampleRate * seconds);
-  const buffer = ctx.createBuffer(1, size, ctx.sampleRate);
-  const data = buffer.getChannelData(0);
-  for (let i = 0; i < size; i++) data[i] = Math.random() * 2 - 1;
-  return buffer;
-}
-
-function stopAmbient() {
-  ambientNodes.forEach(n => { try { n.stop && n.stop(); } catch (e) {} try { n.disconnect && n.disconnect(); } catch (e) {} });
-  ambientNodes = [];
-  ambientPlaying = false;
-  updateAmbientBtn();
-}
-
-function currentAmbientCondition() {
-  return ambientOverride && ambientOverride !== 'auto' ? ambientOverride : wxCondition;
-}
-
-function playAmbientFor(condition) {
-  stopAmbient();
-  if (!ambientEnabled) return;
-  const ctx = ensureAmbientCtx();
-  const master = ctx.createGain();
-  master.gain.value = ambientVolume;
-  master.connect(ctx.destination);
-  ambientNodes.push(master);
-
-  const isNight = (condition || '').startsWith('night');
-  const isRain = (condition || '').includes('rain');
-  const isCloudy = (condition || '').includes('clouds');
-
-  if (isRain) {
-    // Filtered white noise = soft rainfall
-    const noise = ctx.createBufferSource();
-    noise.buffer = makeNoiseBuffer(ctx, 4);
-    noise.loop = true;
-    const filter = ctx.createBiquadFilter();
-    filter.type = 'bandpass'; filter.frequency.value = 2600; filter.Q.value = 0.5;
-    const gain = ctx.createGain(); gain.gain.value = 0.55;
-    noise.connect(filter).connect(gain).connect(master);
-    noise.start();
-    ambientNodes.push(noise, filter, gain);
-
-    // low, slow-breathing rumble underneath
-    const rumble = ctx.createOscillator();
-    rumble.type = 'sine'; rumble.frequency.value = isNight ? 55 : 65;
-    const rumbleGain = ctx.createGain(); rumbleGain.gain.value = 0.06;
-    rumble.connect(rumbleGain).connect(master);
-    rumble.start();
-    ambientNodes.push(rumble, rumbleGain);
-  } else {
-    // Soft ambient pad — cooler/sparser tones at night, warmer by day
-    const freqs = isNight ? [110, 164.81, 220] : (isCloudy ? [123.47, 185, 246.94] : [130.81, 196, 261.63]);
-    freqs.forEach((f, i) => {
-      const osc = ctx.createOscillator();
-      osc.type = 'sine';
-      osc.frequency.value = f;
-      const g = ctx.createGain();
-      g.gain.value = 0.10 / (i + 1);
-      // slow gentle vibrato so the drone feels alive, not static
-      const lfo = ctx.createOscillator(); lfo.frequency.value = 0.08 + i * 0.02;
-      const lfoGain = ctx.createGain(); lfoGain.gain.value = 1.5;
-      lfo.connect(lfoGain).connect(osc.frequency);
-      osc.connect(g).connect(master);
-      osc.start(); lfo.start();
-      ambientNodes.push(osc, g, lfo, lfoGain);
-    });
-  }
-  ambientPlaying = true;
-  updateAmbientBtn();
-}
-
-function updateAmbientForWeather() {
-  if (ambientPlaying) playAmbientFor(currentAmbientCondition());
-}
-
-function updateAmbientBtn() {
-  const btn = document.getElementById('ambient-toggle-btn');
-  if (btn) { btn.textContent = ambientPlaying ? '⏸' : '🎵'; btn.classList.toggle('playing', ambientPlaying); }
-  const sBtn = document.getElementById('settings-ambient-btn');
-  if (sBtn) sBtn.textContent = ambientPlaying ? '⏸ Standby' : '▶ Play Ambience';
-}
-
-function armAmbientGesture() {
-  if (ambientGestureArmed) return;
-  ambientGestureArmed = true;
-  const start = () => {
-    if (ambientEnabled && !ambientPlaying) playAmbientFor(currentAmbientCondition());
-    document.removeEventListener('click', start);
-  };
-  document.addEventListener('click', start, { once: true });
-}
-
-function toggleAmbient() {
-  ensureAmbientCtx();
-  if (ambientPlaying) { stopAmbient(); }
-  else { ambientEnabled = true; saveMusicSettings(); playAmbientFor(currentAmbientCondition()); }
-  syncMusicSettingsUI();
-}
-
-function onMusicSettingChange() {
-  const enabledEl = document.getElementById('music-enabled-toggle');
-  const volEl = document.getElementById('music-volume-slider');
-  const ovEl = document.getElementById('music-override-select');
-  ambientEnabled = enabledEl ? enabledEl.checked : ambientEnabled;
-  ambientVolume = volEl ? parseFloat(volEl.value) : ambientVolume;
-  ambientOverride = ovEl ? ovEl.value : ambientOverride;
-  saveMusicSettings();
-  ambientNodes.forEach(n => { if (n.gain && n.gain.value !== undefined && ambientNodes[0] === n) n.gain.value = ambientVolume; });
-  if (ambientPlaying && ambientNodes[0]) ambientNodes[0].gain.value = ambientVolume;
-  if (!ambientEnabled) stopAmbient();
-  else if (ambientPlaying) playAmbientFor(currentAmbientCondition());
-}
-
-function syncMusicSettingsUI() {
-  const enabledEl = document.getElementById('music-enabled-toggle');
-  const volEl = document.getElementById('music-volume-slider');
-  const ovEl = document.getElementById('music-override-select');
-  if (enabledEl) enabledEl.checked = ambientEnabled;
-  if (volEl) volEl.value = ambientVolume;
-  if (ovEl) ovEl.value = ambientOverride;
-  updateAmbientBtn();
-}
-
-// ============================================================
-// SETTINGS MODAL — Profile / Appearance / Music
+// SETTINGS MODAL — Profile / Appearance
 // ============================================================
 let settingsAvatarFile = null;
 
@@ -3452,14 +3275,13 @@ function openSettingsModal() {
     ? `<img src="${esc(currentUser.avatarUrl)}" alt="" style="width:100%;height:100%;object-fit:cover">`
     : '👤';
   settingsAvatarFile = null;
-  syncMusicSettingsUI();
   document.querySelectorAll('.settings-theme-btn').forEach(b => b.classList.toggle('active', b.dataset.theme === currentTheme));
   switchSettingsTab('profile');
   openModal('modal-settings');
 }
 
 function switchSettingsTab(tab) {
-  ['profile', 'appearance', 'music'].forEach(t => {
+  ['profile', 'appearance'].forEach(t => {
     document.getElementById('settings-tab-' + t).style.display = t === tab ? 'block' : 'none';
   });
   document.querySelectorAll('.settings-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
@@ -3530,11 +3352,8 @@ window.addEventListener('DOMContentLoaded', () => {
   positionMoonArtistically();
   checkAbAiSetup();  // hides the old key panel
 
-  // Theme + ambient weather music setup
+  // Theme setup
   applyTheme(currentTheme);
-  loadMusicSettings();
-  updateAmbientBtn();
-  armAmbientGesture(); // browsers require a user gesture before audio can start
 
   // AB Ai input enter key
   const gi = document.getElementById('abai-input');
