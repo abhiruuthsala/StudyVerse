@@ -1,6 +1,6 @@
 // ════════════════════════════════════════════════════════════════
 //  StudyVerse — script.js (Supabase Integration)
-//  Handles: Auth · File Upload · Resource Load · Gemini Backend
+//  Handles: Auth · File Upload · Resource Load · AB Ai Backend
 // ════════════════════════════════════════════════════════════════
 
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
@@ -230,6 +230,15 @@ window._sbLoadResources = async () => {
   }));
 };
 
+/** Update a resource row's editable fields (title, topic, description, body) */
+window._sbUpdateResource = async (id, updates) => {
+  const { error } = await supabase
+    .from('resources')
+    .update(updates)
+    .eq('id', id);
+  if (error) throw error;
+};
+
 /** Delete a resource row (and its storage file if it has one) */
 window._sbDeleteResource = async (id) => {
   // First fetch the row to get the storage path
@@ -248,26 +257,26 @@ window._sbDeleteResource = async (id) => {
 };
 
 // ════════════════════════════════════════════════════════════════
-//  AI CHAT  (calls Supabase Edge Function — claude-proxy or gemini-proxy)
+//  AI CHAT — "AB Ai"  (calls Supabase Edge Function — claude-proxy or llama-proxy)
 //  The API key is NEVER exposed to the browser.
 //
 //  To enable Claude AI:
 //    1. Deploy supabase/functions/claude-proxy  (see README)
 //    2. supabase secrets set ANTHROPIC_API_KEY=sk-ant-...
 //
-//  To use Gemini instead:
-//    supabase secrets set GEMINI_API_KEY=AIza...
+//  To use AB Ai's default backend (Llama 3.1 via Groq) instead:
+//    supabase secrets set GROQ_API_KEY=gsk_...
 // ════════════════════════════════════════════════════════════════
 
 /**
- * Send a message to the AI via the backend Edge Function.
- * Tries claude-proxy first, falls back to gemini-proxy.
+ * Send a message to AB Ai via the backend Edge Function.
+ * Tries claude-proxy first, falls back to llama-proxy (Llama 3.1).
  *
  * @param {Array}  history  – previous [{role, parts}] turns
  * @param {string} message  – latest user message
  * @returns {string} AI reply text
  */
-window._geminiChat = async (history, message) => {
+window._abAiChat = async (history, message) => {
   const { data: { session } } = await supabase.auth.getSession();
   // Use JWT access_token when available; anon key as fallback
   const authToken = session?.access_token ?? SUPABASE_KEY;
@@ -279,10 +288,10 @@ window._geminiChat = async (history, message) => {
   };
   const body = JSON.stringify({ history, message });
 
-  // Try endpoints in order — claude-proxy first, gemini-proxy as fallback
+  // Try endpoints in order — claude-proxy first, llama-proxy (Llama 3.1) as fallback
   const endpoints = [
     `${SUPABASE_URL}/functions/v1/claude-proxy`,
-    `${SUPABASE_URL}/functions/v1/gemini-proxy`,
+    `${SUPABASE_URL}/functions/v1/llama-proxy`,
   ];
 
   let lastErr;
@@ -366,4 +375,4 @@ window._sbSendChatMsg = async (sender, text) => {
     user_id: user?.id ?? null,
   }]);
   if (error) throw error;
-};
+};
