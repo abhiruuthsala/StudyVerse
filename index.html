@@ -1881,7 +1881,7 @@ async function deleteContent(id) {
 
 function canManage(item) {
   if (!currentUser || !item) return false;
-  if (currentUser.isAdmin) return true;
+  // Strictly the uploader — no exceptions (not even admins).
   // Match by UUID (most reliable — always stored) OR email (fallback for older rows)
   if (item.uploadedBy && currentUser.id && String(item.uploadedBy) === String(currentUser.id)) return true;
   if (item.uploaderEmail && currentUser.email && item.uploaderEmail === currentUser.email) return true;
