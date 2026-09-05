@@ -1,27 +1,21 @@
 // ════════════════════════════════════════════════════════════════
-//  StudyVerse — llama-proxy Edge Function
-//  Powers "AB Ai" — keeps the Llama 3.1 API key on the server;
-//  the browser never sees it.
-//
-//  Uses Groq's OpenAI-compatible chat completions endpoint, which
-//  serves Meta's Llama 3.1 models with very fast inference.
+//  StudyVerse — openai-proxy Edge Function
+//  Powers "AB Ai" using OpenAI's Chat Completions API.
+//  The API key lives in Supabase secrets — the browser never sees it.
 //
 //  Deploy:
-//    supabase functions deploy llama-proxy --project-ref ftingspmkdrdkddsdgtv
-//    supabase secrets set GROQ_API_KEY=gsk_... --project-ref ftingspmkdrdkddsdgtv
+//    supabase functions deploy openai-proxy --project-ref ftingspmkdrdkddsdgtv
+//    supabase secrets set OPENAI_API_KEY=sk-... --project-ref ftingspmkdrdkddsdgtv
 //
-//  Get a free Groq API key at: https://console.groq.com/keys
-//
-//  Want a different Llama 3.1 host instead (Together AI, Fireworks,
-//  Replicate, a self-hosted Ollama box, etc.)? The request/response
-//  shape below is the only thing that would need to change — say the
-//  word and this function can be adapted.
+//  IMPORTANT: use a NEW key here. Any key that has ever been pasted into a
+//  chat, screenshot, or ticket should be treated as compromised and revoked
+//  at platform.openai.com/api-keys before a replacement is issued.
 // ════════════════════════════════════════════════════════════════
 
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 
-const GROQ_API_KEY = Deno.env.get("GROQ_API_KEY");
-const MODEL = "llama-3.1-8b-instant";
+const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+const MODEL = "gpt-4o-mini"; // swap for any chat model your OpenAI account has access to
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -35,10 +29,8 @@ const SYSTEM_INSTRUCTION =
   "Explain concepts clearly and simply, use examples when helpful, and keep a " +
   "warm, supportive tone. Keep answers reasonably concise unless asked for depth.";
 
-// The front-end sends { history: [{role, parts:[{text}]}], message } to
-// match the shape used previously — we translate that into OpenAI-style
-// chat messages here so the front-end didn't need to change its calling
-// convention.
+// Same frontend turn shape used by the existing proxies — no front-end
+// calling-convention changes needed.
 type FrontendChatTurn = { role: string; parts: Array<{ text: string }> };
 
 serve(async (req: Request) => {
@@ -47,8 +39,8 @@ serve(async (req: Request) => {
   }
 
   try {
-    if (!GROQ_API_KEY) {
-      return json({ error: "GROQ_API_KEY not configured. Run: supabase secrets set GROQ_API_KEY=your_key" }, 500);
+    if (!OPENAI_API_KEY) {
+      return json({ error: "OPENAI_API_KEY not configured. Run: supabase secrets set OPENAI_API_KEY=your_key" }, 500);
     }
 
     const body = await req.json().catch(() => ({}));
@@ -68,11 +60,11 @@ serve(async (req: Request) => {
       { role: "user", content: message },
     ];
 
-    const resp = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    const resp = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${GROQ_API_KEY}`,
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
         model: MODEL,
@@ -85,7 +77,7 @@ serve(async (req: Request) => {
     const data = await resp.json();
 
     if (!resp.ok) {
-      const msg = data?.error?.message || `Llama API error (${resp.status})`;
+      const msg = data?.error?.message || `OpenAI API error (${resp.status})`;
       return json({ error: msg }, resp.status);
     }
 
