@@ -290,9 +290,9 @@ window._abAiChat = async (history, message) => {
 
   // Try endpoints in order — claude-proxy first, llama-proxy (Llama 3.1) as fallback
   const endpoints = [
-    `${SUPABASE_URL}/functions/v1/claude-proxy`,
-    `${SUPABASE_URL}/functions/v1/llama-proxy`,
-  ];
+  `${SUPABASE_URL}/functions/v1/openai-proxy`,
+  `${SUPABASE_URL}/functions/v1/llama-proxy`,
+];
 
   let lastErr;
   for (const url of endpoints) {
